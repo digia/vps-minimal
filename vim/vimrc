@@ -1,0 +1,263 @@
+set nocompatible
+
+execute pathogen#infect()
+call pathogen#helptags()
+
+runtime macros/matchit.vim
+
+syntax on
+filetype plugin indent on
+
+" Stylize
+set t_Co=256
+" set guifont=Ubuntu\ Mono\ for\ Powerline:h16
+set antialias
+set encoding=utf-8
+set guioptions-=T
+set background=dark
+let g:monokai_termcolors=256
+let g:molokai_original=1
+colorscheme solarized 
+" colorscheme monokai
+" colorscheme wombat256mod
+" colorscheme base16-monokai
+
+" Cursor styles 
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\" " Normal mode brick
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\" " Edit mode pipe
+
+" Column colors
+let &colorcolumn=join(range(81,999),",") " Join columns 81+ for warning color markers. 
+let &colorcolumn="80,".join(range(120,999),",") " Join columns 120+ for danger color markers.
+
+" override some highlight settings (turn off stupid italics in Molokai)
+highlight ColorColumn  ctermbg=235 guibg=#2c2d27
+highlight CursorLine   ctermbg=235 guibg=#2c2d27
+highlight CursorColumn ctermbg=235 guibg=#2c2d27
+highlight DiffText     gui=none
+highlight Macro        gui=none
+highlight SpecialKey   gui=none
+highlight Special      gui=none
+highlight StorageClass gui=none
+highlight Tag          gui=none
+
+set guioptions-=T                                         " turn off GUI toolbar (icons)
+set guioptions-=r                                         " turn off GUI right scrollbar
+set guioptions-=L                                         " turn off GUI left scrollbar
+set mouse=a                                               " enable mouse for all modes settings
+
+set clipboard=unnamed
+
+set grepprg=ack
+
+set showcmd
+set showmode
+
+set backspace=indent,eol,start
+
+set hidden
+
+set wildmenu
+set wildmode=list:longest
+
+set incsearch
+set hlsearch
+
+set wrap
+set scrolloff=3
+
+set title
+
+set visualbell
+set noerrorbells
+
+set nobackup
+set nowritebackup
+set swapfile
+set directory=~/.vim/tmp
+
+set number
+set ruler
+
+set smartindent
+set autoindent
+set copyindent
+
+set tabstop=4
+set shiftwidth=4
+set shiftround
+
+set showmatch
+
+set expandtab
+set cursorline
+
+set ignorecase
+set smartcase
+set smarttab
+
+set history=1000
+set undolevels=1000
+nmap <silent> ,/ :nohlsearch<CR>
+
+set laststatus=2
+set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
+
+" Paste mode toggle.
+set pastetoggle=<F2>
+
+" (Hopefully) removes the delay when hitting esc in insert mode
+set noesckeys
+set ttimeout
+set ttimeoutlen=1
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
+let mapleader=","
+
+" Don't wait so long for the next keypress (particularly in ambigious Leader
+" situations.
+set timeoutlen=500
+
+" Session Settings
+set ssop-=options    " do not store global and local values in a session
+set ssop-=folds      " do not store folds
+
+" Previous buffer
+nmap <C-e> :e#<CR>
+
+" Window movement
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+
+" CTRLP
+map <C-p> :CtrlPBuffer<CR>
+    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_working_path_mode = 'c'
+
+" NerdTree
+map <C-n> :NERDTreeToggle<CR>
+
+" Tagbar
+nmap <F8> :TagbarToggle<CR>
+
+" CloseTag - Close HTML/XML tags
+autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
+autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag/plugin/closetag.vim
+
+" Tidy - Tidy up that ugly HTML
+map :tidy :%!tidy -qicbn -asxhtml
+
+" NeoComplCache
+let g:acp_enableAtStartup = 0
+    let g:neocomplcache_enable_at_startup = 1
+    let g:neocomplcache_enable_camel_case_completion = 1
+    let g:neocomplcache_enable_smart_case = 1
+    let g:neocomplcache_enable_underbar_completion = 1
+    let g:neocomplcache_enable_auto_delimiter = 1
+    let g:neocomplcache_max_list = 10
+    let g:neocomplcache_force_overwrite_completefunc = 1
+
+    " SuperTab like snippets behavior.
+    " imap <silent><expr><TAB> neosnippet#expandable() ?
+    "             \ "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ?
+    "             \ "\<C-e>" : "\<TAB>")
+    " smap <TAB> <Right><Plug>(neosnippet_jump_or_expand)
+
+    " Define dictionary.
+    let g:neocomplcache_dictionary_filetype_lists = {
+        \ 'default' : '',
+        \ 'vimshell' : $HOME.'/.vimshell_hist',
+        \ 'scheme' : $HOME.'/.gosh_completions'
+            \ }
+
+    " Define keyword.
+    if !exists('g:neocomplcache_keyword_patterns')
+        let g:neocomplcache_keyword_patterns = {}
+    endif
+    let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+    " Plugin key-mappings.
+
+    " These two lines conflict with the default digraph mapping of <C-K>
+    " If you prefer that functionality, add
+    " let g:spf13_no_neosnippet_expand = 1
+    " in your .vimrc.bundles.local file
+
+    " imap <C-k> <Plug>(neosnippet_expand_or_jump)
+    " smap <C-k> <Plug>(neosnippet_expand_or_jump)
+
+    inoremap <expr><C-g> neocomplcache#undo_completion()
+    inoremap <expr><C-l> neocomplcache#complete_common_string()
+    inoremap <expr><CR> neocomplcache#complete_common_string()
+
+    " <TAB>: completion.
+    inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+
+    " <CR>: close popup
+    " <s-CR>: close popup and save indent.
+    inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup()"\<CR>" : "\<CR>"
+    inoremap <expr><CR> pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+    inoremap <expr><C-y> neocomplcache#close_popup()
+
+    " Enable omni completion.
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+    " Enable heavy omni completion.
+    if !exists('g:neocomplcache_omni_patterns')
+        let g:neocomplcache_omni_patterns = {}
+    endif
+    let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+    let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+    let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+    let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+    let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+    
+    " NeoSnippet
+    " Plugin key-mappings.
+    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+    " SuperTab like snippets behavior.
+    imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+    \ "\<Plug>(neosnippet_expand_or_jump)"
+    \: pumvisible() ? "\<C-n>" : "\<TAB>"
+    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+    \ "\<Plug>(neosnippet_expand_or_jump)"
+    \: "\<TAB>"
+
+    " For snippet_complete marker.
+    if has('conceal')
+    set conceallevel=2 concealcursor=i
+    endif
+    " Use honza's snippets.
+    let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+
+    " Enable neosnippet snipmate compatibility mode
+    let g:neosnippet#enable_snipmate_compatibility = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE (thanks Gary Bernhardt)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <Leader>n :call RenameFile()<cr>
